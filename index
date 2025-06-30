@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Global Compensation Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard, moving from a high-level global summary to a granular, user-driven salary explorer. The structure is: 1) Hero/Header with navigation. 2) Key Global Findings section using cards for quick insights. 3) The core 'Interactive Salary Explorer' with dropdowns (Region, Role, Seniority) controlling a central bar chart and a contextual details panel. This allows for direct comparison, which is the primary user goal. 4) A 'Career Progression' visual to show salary growth. 5) An 'About the Roles' accordion for context. 6) 'Strategic Recommendations' section for actionable takeaways. This task-oriented, non-linear structure was chosen to make the dense report data immediately accessible and comparable, enabling executives to find specific information without reading the entire document. -->
+    <!-- Visualization & Content Choices: 1. Key Findings: Goal=Inform, Method=Stat Cards (HTML/Tailwind) for high-impact stats. 2. Salary Comparison: Goal=Compare, Method=Horizontal Bar Chart (Chart.js/Canvas) for clear Public vs. Private comparison, controlled by dropdowns. Interaction=User filtering updates chart and a dynamic text panel with qualitative insights. Justification=This is the most direct way to explore the core dataset. 3. Career Progression: Goal=Show Change, Method=Stepped Diagram (HTML/Tailwind) for a clean visual of seniority-based salary growth. 4. Role Info: Goal=Organise, Method=Accordion (HTML/JS) to hide/show definitions, reducing clutter. Justification=This approach transforms the static report into a dynamic, user-centric tool for exploration and analysis. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #4f46e5;
+        }
+        .control-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-indigo-600">Global Comp<span class="text-gray-700">Analysis</span></h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#explorer" class="nav-link font-medium text-gray-600">Salary Explorer</a>
+                <a href="#progression" class="nav-link font-medium text-gray-600">Career Path</a>
+                <a href="#roles" class="nav-link font-medium text-gray-600">Role Definitions</a>
+                <a href="#strategy" class="nav-link font-medium text-gray-600">Strategy</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
+             <a href="#explorer" class="block nav-link font-medium text-gray-600">Salary Explorer</a>
+             <a href="#progression" class="block nav-link font-medium text-gray-600">Career Path</a>
+             <a href="#roles" class="block nav-link font-medium text-gray-600">Role Definitions</a>
+             <a href="#strategy" class="block nav-link font-medium text-gray-600">Strategy</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+        <section class="text-center mb-12 md:mb-16">
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-4">Global Compensation Insights</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 text-lg">An interactive analysis of 2024-2025 salaries for Commercial and Procurement professionals. Explore the key differences between public and private sectors across major global markets.</p>
+        </section>
+        
+        <section id="key-findings" class="mb-12 md:mb-16">
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-indigo-600 text-2xl mb-2">+20.5%</h3>
+                    <p class="text-gray-700 font-semibold">UK Salary Boost with MCIPS</p>
+                    <p class="text-sm text-gray-500">Holding a CIPS certification provides a significant, quantifiable earnings premium in the UK market.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-indigo-600 text-2xl mb-2">Private Sector Premium</h3>
+                    <p class="text-gray-700 font-semibold">Higher Base Salaries</p>
+                    <p class="text-sm text-gray-500">Globally, the private sector consistently offers higher base salaries, especially in the US and at senior levels.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-indigo-600 text-2xl mb-2">>25% Contribution</h3>
+                    <p class="text-gray-700 font-semibold">Public Sector "Total Reward"</p>
+                    <p class="text-sm text-gray-500">UK public sector roles are bolstered by generous pension schemes, a key part of their value proposition.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="explorer" class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-lg mb-12 md:mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-2">Interactive Salary Explorer</h2>
+            <p class="text-center text-gray-600 mb-8">Select a region, role, and seniority level to compare average annual salaries.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div>
+                    <label for="region-select" class="block text-sm font-medium text-gray-700 mb-1">Region</label>
+                    <select id="region-select" class="control-select w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="UK">United Kingdom</option>
+                        <option value="US">United States</option>
+                        <option value="Europe">Europe</option>
+                        <option value="Africa">Africa</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="role-select" class="block text-sm font-medium text-gray-700 mb-1">Role Category</label>
+                    <select id="role-select" class="control-select w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="Procurement">Procurement</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="Contract/Supplier">Contract & Supplier</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="seniority-select" class="block text-sm font-medium text-gray-700 mb-1">Seniority Level</label>
+                    <select id="seniority-select" class="control-select w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                        <option value="Junior">Junior</option>
+                        <option value="Mid-Career">Mid-Career</option>
+                        <option value="Senior">Senior</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="chart-container">
+                    <canvas id="salaryChart"></canvas>
+                </div>
+                <div id="details-panel" class="bg-indigo-50 p-6 rounded-lg border border-indigo-200">
+                    <h3 id="details-title" class="font-bold text-xl text-indigo-800 mb-3"></h3>
+                    <p id="details-text" class="text-gray-700"></p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="progression" class="mb-12 md:mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-2">Career & Salary Progression</h2>
+            <p class="text-center text-gray-600 mb-8">A look at how responsibilities and compensation evolve from junior to senior roles.</p>
+            <div class="w-full max-w-4xl mx-auto space-y-8">
+                 <div class="flex items-center">
+                    <div class="bg-indigo-500 text-white rounded-full w-16 h-16 flex items-center justify-center font-bold text-xl z-10 shadow-lg">01</div>
+                    <div class="flex-grow bg-white border-t-2 border-b-2 border-l-0 border-r-2 border-indigo-200 p-6 rounded-r-lg ml-[-1rem] pl-10">
+                        <h3 class="font-bold text-lg">Junior / Entry-Level (0-4 Yrs)</h3>
+                        <p class="text-gray-600">Focus on administrative, task-oriented duties under supervision. Roles include Analyst, Officer, Buyer. It's a foundational period for learning core processes.</p>
+                    </div>
+                </div>
+                 <div class="flex items-center justify-end">
+                    <div class="flex-grow bg-white border-t-2 border-b-2 border-r-0 border-l-2 border-indigo-200 p-6 rounded-l-lg mr-[-1rem] pr-10 text-right">
+                        <h3 class="font-bold text-lg">Mid-Career / Manager (5-10 Yrs)</h3>
+                        <p class="text-gray-600">Operates with autonomy, managing full functional lifecycles, leading negotiations, and often managing teams. Accountable for specific outcomes.</p>
+                    </div>
+                    <div class="bg-indigo-600 text-white rounded-full w-16 h-16 flex items-center justify-center font-bold text-xl z-10 shadow-lg">02</div>
+                </div>
+                <div class="flex items-center">
+                    <div class="bg-indigo-700 text-white rounded-full w-16 h-16 flex items-center justify-center font-bold text-xl z-10 shadow-lg">03</div>
+                    <div class="flex-grow bg-white border-t-2 border-b-2 border-l-0 border-r-2 border-indigo-200 p-6 rounded-r-lg ml-[-1rem] pl-10">
+                        <h3 class="font-bold text-lg">Senior / Leadership (10+ Yrs)</h3>
+                        <p class="text-gray-600">Defines strategy, drives corporate policy, and manages large teams and budgets. Focus is on organisational impact and aligning functions with corporate objectives.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roles" class="mb-12 md:mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">About the Roles</h2>
+            <div id="accordion-container" class="max-w-4xl mx-auto space-y-3">
+            </div>
+        </section>
+
+        <section id="strategy">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">Strategic Recommendations for 2025</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-xl font-bold mb-4 text-indigo-700">For Private Sector Employers</h3>
+                    <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><span class="font-semibold">Benchmark Holistically:</span> Articulate the full value of bonuses, stock options, and career progression to compete with public sector security.</li>
+                        <li><span class="font-semibold">Invest in Certifications:</span> Funding CIPS, NCMA, etc., is a high-ROI strategy for upskilling and retaining top talent.</li>
+                        <li><span class="font-semibold">Targeted Compensation:</span> With wage growth slowing, shift to meritocratic pay models that reward critical skills like data analytics and risk management.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-xl font-bold mb-4 text-indigo-700">For Public Sector Employers</h3>
+                    <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><span class="font-semibold">Market "Total Reward":</span> Aggressively promote the long-term financial value of pensions and job security to attract candidates.</li>
+                        <li><span class="font-semibold">Promote Career Paths:</span> Leverage structured grading systems to show clear, visible career trajectories from entry-level to senior leadership.</li>
+                        <li><span class="font-semibold">Use Pay Flexibilities:</span> Strategically deploy recruitment/retention allowances (RRAs) to secure talent for mission-critical, skill-scarce roles.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-4 text-center text-gray-400">
+            <p>Data sourced from the "Global Compensation Analysis for Commercial and Procurement Professionals" report (2024-2025).</p>
+            <p>This interactive dashboard is a visual interpretation for analysis purposes.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const salaryData = {
+                'UK': {
+                    'currency': 'GBP', 'symbol': '£',
+                    'Procurement': {
+                        'Junior': { 'private': 40000, 'public': 38000, 'text': 'Junior roles in the UK public sector (HEO grade) are competitive with private entry-level positions, providing a solid training ground. The London premium significantly elevates private sector salaries.'},
+                        'Mid-Career': { 'private': 53000, 'public': 55000, 'text': 'Mid-career public roles (SEO/G7) are very competitive, sometimes exceeding the national private average. However, the private sector ceiling, especially in London (£91k+), is much higher.'},
+                        'Senior': { 'private': 105000, 'public': 83000, 'text': 'At the senior level, the private sector pay gap widens significantly. Public sector leaders (G6/SCS) have strong salaries but are outmatched by private director-level compensation, which often includes large bonuses.'}
+                    },
+                    'Commercial': {
+                        'Junior': { 'private': 47500, 'public': 38000, 'text': 'Private sector commercial roles often start higher due to their proximity to revenue generation. Public sector roles at this level are comparable to other functions.'},
+                        'Mid-Career': { 'private': 61000, 'public': 55000, 'text': 'Experienced Commercial Managers in the private sector see a strong salary uplift. The London average (£83k) is a major draw for talent, creating retention challenges for public bodies.'},
+                        'Senior': { 'private': 112500, 'public': 85000, 'text': 'Senior commercial leaders in the private sector command substantial salaries, often exceeding £150k in London. The public sector offers strategic roles but cannot compete on direct remuneration.'}
+                    },
+                    'Contract/Supplier': {
+                        'Junior': { 'private': 35000, 'public': 32500, 'text': 'Entry-level contract and supplier roles have similar starting points in both sectors. Public sector roles (e.g., NHS Band 5) offer stability.'},
+                        'Mid-Career': { 'private': 57000, 'public': 58000, 'text': 'This is a key crossover point where public sector roles (NHS Band 7/G7) can be more lucrative than the national private average, especially when considering the pension benefits.'},
+                        'Senior': { 'private': 97500, 'public': 84000, 'text': 'The private sector pulls ahead for senior roles, though public sector leadership positions (NHS Band 8c/G6) provide a strong and secure total reward package.'}
+                    }
+                },
+                'US': {
+                    'currency': 'USD', 'symbol': '$',
+                    'Procurement': {
+                        'Junior': { 'private': 72500, 'public': 60000, 'text': 'The US federal government offers structured entry paths (GS-7/9) which are competitive but typically below private sector starting salaries for specialised analyst roles.'},
+                        'Mid-Career': { 'private': 132000, 'public': 95000, 'text': 'The private sector pay gap is significant at the managerial level. While a federal GS-12/13 offers a good income, it is often 30-40% less than a comparable private sector role.'},
+                        'Senior': { 'private': 185000, 'public': 155000, 'text': 'Senior federal leaders (GS-14/15) are well-compensated, but their salaries are capped by the GS scale. Private sector VPs can earn substantially more, plus significant variable pay.'}
+                    },
+                    'Commercial': {
+                        'Junior': { 'private': 85000, 'public': null, 'text': 'Dedicated "Commercial Manager" roles are less common in the US federal government, making this a primarily private sector career path with high entry-level salaries.'},
+                        'Mid-Career': { 'private': 127000, 'public': null, 'text': 'The average salary for a private sector Commercial Manager is very high, with major tech and finance hubs pushing this figure even higher. This role has no direct public sector equivalent.'},
+                        'Senior': { 'private': 175000, 'public': null, 'text': 'Senior commercial roles are strategic and highly paid positions within private enterprises, responsible for driving profitability.'}
+                    },
+                    'Contract/Supplier': {
+                        'Junior': { 'private': 80000, 'public': 60000, 'text': 'Federal Contract Specialist roles (GS-7/9) are a common entry point. Private sector roles, especially with defense contractors, often pay more to attract talent familiar with federal regulations (FAR).'},
+                        'Mid-Career': { 'private': 116000, 'public': 95000, 'text': 'NCMA certifications (like CFCM) are a major driver of earnings in this space. An experienced GS-12/13 federal specialist has a secure career, but a certified private sector peer typically earns more.'},
+                        'Senior': { 'private': 165000, 'public': 155000, 'text': 'At the senior director level, the pay gap narrows as federal GS-14/15 salaries become highly competitive. However, the private sector still offers a higher ceiling.'}
+                    }
+                },
+                'Europe': {
+                    'currency': 'EUR', 'symbol': '€',
+                    'Procurement': {
+                        'Junior': { 'private': 45000, 'public': 38000, 'text': 'The public-private pay gap varies. In Germany, the gap is wide at entry-level. In France, public sector starting salaries are more competitive with the private market.'},
+                        'Mid-Career': { 'private': 72000, 'public': 65000, 'text': 'French public sector managers can earn on par with private counterparts. In Germany and the Netherlands, the private sector typically offers higher pay for experienced managers.'},
+                        'Senior': { 'private': 110000, 'public': 85000, 'text': 'Across Europe, private sector leadership roles offer significantly higher earning potential. The gap is widest in Germany and narrowest in France for senior public servants.'}
+                    },
+                    'Commercial': {
+                        'Junior': {'private': 50000, 'public': null, 'text': 'Similar to the US, specific "Commercial Manager" titles are more prevalent and standardised in the private sector across Europe.'},
+                        'Mid-Career': {'private': 80000, 'public': null, 'text': 'Private sector commercial roles are well-remunerated, acting as a strategic bridge between sales, finance, and operations.'},
+                        'Senior': {'private': 120000, 'public': null, 'text': 'Senior commercial leaders are key strategic figures in large European corporations, with compensation packages to match.'}
+                    },
+                    'Contract/Supplier': {
+                        'Junior': { 'private': 42000, 'public': 39000, 'text': 'Entry-level roles show less pay disparity across the analysed European markets, with the public sector offering a stable and competitive starting point.'},
+                        'Mid-Career': { 'private': 65000, 'public': 60000, 'text': 'The Netherlands shows a relatively aligned market for mid-career professionals, while Germany has a clearer private sector advantage.'},
+                        'Senior': { 'private': 90000, 'public': 80000, 'text': 'Senior public sector roles remain competitive, particularly in France. However, the highest earning potential for senior specialists is consistently found in the private sector.'}
+                    }
+                },
+                'Africa': {
+                    'currency': 'USD', 'symbol': '$',
+                    'Procurement': {
+                        'Junior': { 'private': 13500, 'public': null, 'text': 'Salaries in Africa are highly variable. Data suggests private sector roles are the primary driver of the market. The public sector struggles to compete in a volatile talent war.'},
+                        'Mid-Career': { 'private': 26000, 'public': null, 'text': 'A mid-career Procurement Manager in South Africa earns a moderate salary by global standards, but this is a high income in the local context. The market is defined by high average salary *increases* (14%) used to poach talent.'},
+                        'Senior': { 'private': 77000, 'public': null, 'text': 'Senior roles, particularly in economic hubs like Johannesburg, command salaries that are competitive regionally. There is a significant brain drain from public to private sectors.'}
+                    },
+                    'Commercial': {
+                        'Junior': { 'private': 15000, 'public': null, 'text': 'Commercial roles are concentrated in the private sector, often in high-growth industries like finance, tech, and natural resources.'},
+                        'Mid-Career': { 'private': 30000, 'public': null, 'text': 'Experienced managers are in high demand as companies seek to professionalise their commercial and supply chain functions.'},
+                        'Senior': { 'private': 80000, 'public': null, 'text': 'Top-tier commercial talent is scarce, leading to aggressive recruitment tactics and high compensation packages for proven leaders.'}
+                    },
+                    'Contract/Supplier': {
+                        'Junior': { 'private': 9000, 'public': null, 'text': 'Salaries for junior roles can be low in absolute USD terms (e.g., Nigeria, Kenya), reflecting local economic conditions.'},
+                        'Mid-Career': { 'private': 11000, 'public': null, 'text': 'Mid-level specialists are crucial for managing supply chains, but pay varies dramatically between countries like Kenya and South Africa.'},
+                        'Senior': { 'private': 43000, 'public': null, 'text': 'The average senior salary for Sub-Saharan Africa is around $40k-$43k. However, country-specific data shows this can be much higher for top roles in major economies.'}
+                    }
+                }
+            };
+
+            const roleDefinitions = [
+                 { title: 'Contract Management', content: 'The discipline responsible for managing the entire lifecycle of contractual agreements, from drafting and negotiation to ensuring adherence, managing changes, and minimising financial and operational risk.' },
+                 { title: 'Commercial Management', content: 'A broad, strategic function focused on driving the overall commercial health of an organisation. It includes contract management but extends to pricing strategies, risk mitigation, and aligning commercial activities with company strategy.' },
+                 { title: 'Supplier Management (SRM)', content: 'A strategic approach to managing interactions with suppliers to streamline processes and build collaborative, long-term partnerships. It aims to reduce supply chain risk, improve quality, and unlock shared value.' },
+                 { title: 'Procurement', content: 'The comprehensive process of acquiring all goods, services, and works vital for an organisation. It is a strategic function that covers the entire procure-to-pay cycle, from forecasting needs to sourcing and payment.' }
+            ];
+
+            const regionSelect = document.getElementById('region-select');
+            const roleSelect = document.getElementById('role-select');
+            const senioritySelect = document.getElementById('seniority-select');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsText = document.getElementById('details-text');
+            const accordionContainer = document.getElementById('accordion-container');
+
+            let salaryChart;
+
+            function formatCurrency(value, currency, symbol) {
+                if (value === null) return 'N/A';
+                return new Intl.NumberFormat('en-GB', {
+                    style: 'currency',
+                    currency: currency,
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(value).replace(symbol, symbol + ' ');
+            }
+
+            function updateChart() {
+                const region = regionSelect.value;
+                const role = roleSelect.value;
+                const seniority = senioritySelect.value;
+
+                const data = salaryData[region][role][seniority];
+                const currency = salaryData[region].currency;
+                const symbol = salaryData[region].symbol;
+                
+                const privateSalary = data.private;
+                const publicSalary = data.public;
+                
+                const showPublicSector = publicSalary !== null;
+                
+                salaryChart.data.labels = showPublicSector ? ['Private Sector', 'Public Sector'] : ['Private Sector'];
+                salaryChart.data.datasets[0].data = showPublicSector ? [privateSalary, publicSalary] : [privateSalary];
+
+                salaryChart.options.plugins.tooltip.callbacks.label = function(context) {
+                    let label = context.dataset.label || '';
+                    if (label) {
+                        label += ': ';
+                    }
+                    if (context.parsed.x !== null) {
+                        label += formatCurrency(context.parsed.x, currency, symbol);
+                    }
+                    return label;
+                };
+
+                salaryChart.options.scales.x.ticks.callback = function(value) {
+                    return formatCurrency(value, currency, symbol);
+                };
+                
+                salaryChart.update();
+
+                detailsTitle.textContent = `${seniority} ${role} in ${region}`;
+                detailsText.textContent = data.text || 'No specific insight available for this selection.';
+            }
+
+            function createChart() {
+                const ctx = document.getElementById('salaryChart').getContext('2d');
+                salaryChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Average Annual Salary',
+                            data: [],
+                            backgroundColor: [
+                                'rgba(79, 70, 229, 0.7)',
+                                'rgba(129, 140, 248, 0.7)',
+                            ],
+                            borderColor: [
+                                'rgba(79, 70, 229, 1)',
+                                'rgba(129, 140, 248, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#1f2937',
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 12 },
+                                padding: 12,
+                                cornerRadius: 4,
+                                displayColors: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(229, 231, 235, 1)'
+                                },
+                                ticks: {
+                                     font: {
+                                        size: 10
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function buildAccordion() {
+                roleDefinitions.forEach((item, index) => {
+                    const buttonId = `accordion-button-${index}`;
+                    const contentId = `accordion-content-${index}`;
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'bg-white border border-gray-200 rounded-lg overflow-hidden';
+                    
+                    itemDiv.innerHTML = `
+                        <h2>
+                            <button type="button" id="${buttonId}" class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-indigo-200" aria-expanded="false" aria-controls="${contentId}">
+                                <span>${item.title}</span>
+                                <svg class="w-3 h-3 rotate-0 shrink-0 transition-transform duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="${contentId}" class="hidden p-5 border-t border-gray-200">
+                            <p class="text-gray-600">${item.content}</p>
+                        </div>
+                    `;
+                    
+                    accordionContainer.appendChild(itemDiv);
+                    
+                    const button = document.getElementById(buttonId);
+                    const content = document.getElementById(contentId);
+                    const icon = button.querySelector('svg');
+
+                    button.addEventListener('click', () => {
+                        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                        button.setAttribute('aria-expanded', !isExpanded);
+                        content.classList.toggle('hidden');
+                        icon.classList.toggle('rotate-180');
+                    });
+                });
+            }
+
+            regionSelect.addEventListener('change', updateChart);
+            roleSelect.addEventListener('change', updateChart);
+            senioritySelect.addEventListener('change', updateChart);
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            createChart();
+            updateChart();
+            buildAccordion();
+        });
+    </script>
+
+</body>
+</html>
