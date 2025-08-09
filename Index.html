@@ -3,104 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Global Compensation Dashboard</title>
+    <title>Global Compensation & Career Navigator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <!-- Chosen Palette: Warm Neutral Harmony -->
     <!-- Application Structure Plan: The application is designed as an interactive dashboard, moving from a high-level global summary to a granular, user-driven salary explorer. The structure is: 1) Hero/Header with navigation. 2) Key Global Findings section using cards for quick insights. 3) The core 'Interactive Salary Explorer' with dropdowns (Region, Role, Seniority) controlling a central bar chart and a contextual details panel. This allows for direct comparison, which is the primary user goal. 4) A 'Career Progression' visual to show salary growth. 5) An 'About the Roles' accordion for context. 6) 'Strategic Recommendations' section for actionable takeaways. This task-oriented, non-linear structure was chosen to make the dense report data immediately accessible and comparable, enabling executives to find specific information without reading the entire document. -->
     <!-- Visualization & Content Choices: 1. Key Findings: Goal=Inform, Method=Stat Cards (HTML/Tailwind) for high-impact stats. 2. Salary Comparison: Goal=Compare, Method=Horizontal Bar Chart (Chart.js/Canvas) for clear Public vs. Private comparison, controlled by dropdowns. Interaction=User filtering updates chart and a dynamic text panel with qualitative insights. Justification=This is the most direct way to explore the core dataset. 3. Career Progression: Goal=Show Change, Method=Stepped Diagram (HTML/Tailwind) for a clean visual of seniority-based salary growth. 4. Role Info: Goal=Organise, Method=Accordion (HTML/JS) to hide/show definitions, reducing clutter. Justification=This approach transforms the static report into a dynamic, user-centric tool for exploration and analysis. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
-        }
-        .nav-link {
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover {
-            color: #4f46e5;
-        }
-        .control-select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-    </style>
 </head>
 <body class="text-gray-800">
 
-    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-200">
+    <header class="bg-gradient-to-r from-indigo-800 to-indigo-600 text-white shadow-lg sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-bold text-indigo-600">Global Comp<span class="text-gray-700">Analysis</span></h1>
+            <h1 class="text-xl md:text-2xl font-bold">Global Comp<span class="text-indigo-300">Analysis</span></h1>
             <div class="hidden md:flex space-x-8">
-                <a href="#explorer" class="nav-link font-medium text-gray-600">Salary Explorer</a>
-                <a href="#progression" class="nav-link font-medium text-gray-600">Career Path</a>
-                <a href="#roles" class="nav-link font-medium text-gray-600">Role Definitions</a>
-                <a href="#strategy" class="nav-link font-medium text-gray-600">Strategy</a>
+                <a href="#explorer" class="nav-link font-medium">Salary Explorer</a>
+                <a href="#progression" class="nav-link font-medium">Career Path</a>
+                <a href="#roles" class="nav-link font-medium">Role Definitions</a>
+                <a href="#strategy" class="nav-link font-medium">Strategy</a>
             </div>
-            <button id="mobile-menu-button" class="md:hidden text-gray-600">
+            <button id="mobile-menu-button" class="md:hidden text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </nav>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2">
-             <a href="#explorer" class="block nav-link font-medium text-gray-600">Salary Explorer</a>
-             <a href="#progression" class="block nav-link font-medium text-gray-600">Career Path</a>
-             <a href="#roles" class="block nav-link font-medium text-gray-600">Role Definitions</a>
-             <a href="#strategy" class="block nav-link font-medium text-gray-600">Strategy</a>
+        <div id="mobile-menu" class="hidden md:hidden bg-indigo-700 px-6 pb-4 space-y-2">
+             <a href="#explorer" class="block nav-link font-medium">Salary Explorer</a>
+             <a href="#progression" class="block nav-link font-medium">Career Path</a>
+             <a href="#roles" class="block nav-link font-medium">Role Definitions</a>
+             <a href="#strategy" class="block nav-link font-medium">Strategy</a>
         </div>
     </header>
 
     <main class="container mx-auto px-6 py-8 md:py-12">
-        <section class="text-center mb-12 md:mb-16">
-            <h2 class="text-3xl md:text-5xl font-extrabold mb-4">Global Compensation Insights</h2>
+        <section class="hero-section text-center mb-12 md:mb-16">
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-4 text-gray-800">Global Compensation Insights</h2>
             <p class="max-w-3xl mx-auto text-gray-600 text-lg">An interactive analysis of 2024-2025 salaries for Commercial and Procurement professionals. Explore the key differences between public and private sectors across major global markets.</p>
         </section>
         
         <section id="key-findings" class="mb-12 md:mb-16">
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 class="font-bold text-indigo-600 text-2xl mb-2">+20.5%</h3>
-                    <p class="text-gray-700 font-semibold">UK Salary Boost with MCIPS</p>
-                    <p class="text-sm text-gray-500">Holding a CIPS certification provides a significant, quantifiable earnings premium in the UK market.</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="card-item bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="font-bold text-indigo-600 text-3xl mb-2">+20.5%</h3>
+                    <p class="text-gray-800 font-semibold">UK Salary Boost with MCIPS</p>
+                    <p class="text-sm text-gray-500 mt-1">CIPS certification provides a quantifiable earnings premium.</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 class="font-bold text-indigo-600 text-2xl mb-2">Private Sector Premium</h3>
-                    <p class="text-gray-700 font-semibold">Higher Base Salaries</p>
-                    <p class="text-sm text-gray-500">Globally, the private sector consistently offers higher base salaries, especially in the US and at senior levels.</p>
+                <div class="card-item bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="font-bold text-indigo-600 text-3xl mb-2">Private Sector Premium</h3>
+                    <p class="text-gray-800 font-semibold">Higher Base Salaries Globally</p>
+                    <p class="text-sm text-gray-500 mt-1">Especially in the US and at senior levels.</p>
                 </div>
-                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 class="font-bold text-indigo-600 text-2xl mb-2">>25% Contribution</h3>
-                    <p class="text-gray-700 font-semibold">Public Sector "Total Reward"</p>
-                    <p class="text-sm text-gray-500">UK public sector roles are bolstered by generous pension schemes, a key part of their value proposition.</p>
+                <div class="card-item bg-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <h3 class="font-bold text-indigo-600 text-3xl mb-2">>25%</h3>
+                    <p class="text-gray-800 font-semibold">Public Sector "Total Reward"</p>
+                    <p class="text-sm text-gray-500 mt-1">Generous pension schemes bolster UK public sector roles.</p>
                 </div>
             </div>
         </section>
 
-        <section id="explorer" class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-lg mb-12 md:mb-16">
+        <section id="explorer" class="bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-2xl mb-12 md:mb-16">
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-2">Interactive Salary Explorer</h2>
             <p class="text-center text-gray-600 mb-8">Select a region, role, and seniority level to compare average annual salaries.</p>
 
