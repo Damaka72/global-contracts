@@ -1,0 +1,93 @@
+{
+    "salaryData": {
+        "UK": {
+            "currency": "GBP", "symbol": "£",
+            "Procurement": {
+                "Junior": { "private": 40000, "public": 38000, "text": "Junior roles in the UK public sector (HEO grade) are competitive with private entry-level positions, providing a solid training ground. The London premium significantly elevates private sector salaries."},
+                "Mid-Career": { "private": 53000, "public": 55000, "text": "Mid-career public roles (SEO/G7) are very competitive, sometimes exceeding the national private average. However, the private sector ceiling, especially in London (£91k+), is much higher."},
+                "Senior": { "private": 105000, "public": 83000, "text": "At the senior level, the private sector pay gap widens significantly. Public sector leaders (G6/SCS) have strong salaries but are outmatched by private director-level compensation, which often includes large bonuses."}
+            },
+            "Commercial": {
+                "Junior": { "private": 47500, "public": 38000, "text": "Private sector commercial roles often start higher due to their proximity to revenue generation. Public sector roles at this level are comparable to other functions.'"},
+                "Mid-Career": { "private": 61000, "public": 55000, "text": "Experienced Commercial Managers in the private sector see a strong salary uplift. The London average (£83k) is a major draw for talent, creating retention challenges for public bodies.'"},
+                "Senior": { "private": 112500, "public": 85000, "text": "Senior commercial leaders in the private sector command substantial salaries, often exceeding £150k in London. The public sector offers strategic roles but cannot compete on direct remuneration.'"}
+            },
+            "Contract/Supplier": {
+                "Junior": { "private": 35000, "public": 32500, "text": "Entry-level contract and supplier roles have similar starting points in both sectors. Public sector roles (e.g., NHS Band 5) offer stability.'"},
+                "Mid-Career": { "private": 57000, "public": 58000, "text": "This is a key crossover point where public sector roles (NHS Band 7/G7) can be more lucrative than the national private average, especially when considering the pension benefits.'"},
+                "Senior": { "private": 97500, "public": 84000, "text": "The private sector pulls ahead for senior roles, though public sector leadership positions (NHS Band 8c/G6) provide a strong and secure total reward package.'"}
+            }
+        },
+        "US": {
+            "currency": "USD", "symbol": "$",
+            "Procurement": {
+                "Junior": { "private": 72500, "public": 60000, "text": "The US federal government offers structured entry paths (GS-7/9) which are competitive but typically below private sector starting salaries for specialised analyst roles.'"},
+                "Mid-Career": { "private": 132000, "public": 95000, "text": "The private sector pay gap is significant at the managerial level. While a federal GS-12/13 offers a good income, it is often 30-40% less than a comparable private sector role.'"},
+                "Senior": { "private": 185000, "public": 155000, "text": "Senior federal leaders (GS-14/15) are well-compensated, but their salaries are capped by the GS scale. Private sector VPs can earn substantially more, plus significant variable pay.'"}
+            },
+            "Commercial": {
+                "Junior": { "private": 85000, "public": null, "text": "Dedicated \"Commercial Manager\" roles are less common in the US federal government, making this a primarily private sector career path with high entry-level salaries.'"},
+                "Mid-Career": { "private": 127000, "public": null, "text": "The average salary for a private sector Commercial Manager is very high, with major tech and finance hubs pushing this figure even higher. This role has no direct public sector equivalent.'"},
+                "Senior": { "private": 175000, "public": null, "text": "Senior commercial roles are strategic and highly paid positions within private enterprises, responsible for driving profitability.'"}
+            },
+            "Contract/Supplier": {
+                "Junior": { "private": 80000, "public": 60000, "text": "Federal Contract Specialist roles (GS-7/9) are a common entry point. Private sector roles, especially with defense contractors, often pay more to attract talent familiar with federal regulations (FAR).''"},
+                "Mid-Career": { "private": 116000, "public": 95000, "text": "NCMA certifications (like CFCM) are a major driver of earnings in this space. An experienced GS-12/13 federal specialist has a secure career, but a certified private sector peer typically earns more.'"},
+                "Senior": { "private": 165000, "public": 155000, "text": "At the senior director level, the pay gap narrows as federal GS-14/15 salaries become highly competitive. However, the private sector still offers a higher ceiling.'"}
+            }
+        },
+        "Europe": {
+            "currency": "EUR", "symbol": "€",
+            "Procurement": {
+                "Junior": { "private": 45000, "public": 38000, "text": "The public-private pay gap varies. In Germany, the gap is wide at entry-level. In France, public sector starting salaries are more competitive with the private market.'"},
+                "Mid-Career": { "private": 72000, "public": 65000, "text": "French public sector managers can earn on par with private counterparts. In Germany and the Netherlands, the private sector typically offers higher pay for experienced managers.'"},
+                "Senior": { "private": 110000, "public": 85000, "text": "Across Europe, private sector leadership roles offer significantly higher earning potential. The gap is widest in Germany and narrowest in France for senior public servants.'"}
+            },
+            "Commercial": {
+                "Junior": {"private": 50000, "public": null, "text": "Similar to the US, specific \"Commercial Manager\" titles are more prevalent and standardised in the private sector across Europe.'"},
+                "Mid-Career": {"private": 80000, "public": null, "text": "Private sector commercial roles are well-remunerated, acting as a strategic bridge between sales, finance, and operations.'"},
+                "Senior": {"private": 120000, "public": null, "text": "Senior commercial leaders are key strategic figures in large European corporations, with compensation packages to match.'"}
+            },
+            "Contract/Supplier": {
+                "Junior": { "private": 42000, "public": 39000, "text": "Entry-level roles show less pay disparity across the analysed European markets, with the public sector offering a stable and competitive starting point.'"},
+                "Mid-Career": { "private": 65000, "public": 60000, "text": "The Netherlands shows a relatively aligned market for mid-career professionals, while Germany has a clearer private sector advantage.'"},
+                "Senior": { "private": 90000, "public": 80000, "text": "Senior public sector roles remain competitive, particularly in France. However, the highest earning potential for senior specialists is consistently found in the private sector.'"}
+            }
+        },
+        "Africa": {
+            "currency": "USD", "symbol": "$",
+            "Procurement": {
+                "Junior": { "private": 13500, "public": null, "text": "Salaries in Africa are highly variable. Data suggests private sector roles are the primary driver of the market. The public sector struggles to compete in a volatile talent war.'"},
+                "Mid-Career": { "private": 26000, "public": null, "text": "A mid-career Procurement Manager in South Africa earns a moderate salary by global standards, but this is a high income in the local context. The market is defined by high average salary *increases* (14%) used to poach talent.'"},
+                "Senior": { "private": 77000, "public": null, "text": "Senior roles, particularly in economic hubs like Johannesburg, command salaries that are competitive regionally. There is a significant brain drain from public to private sectors.'"}
+            },
+            "Commercial": {
+                "Junior": { "private": 15000, "public": null, "text": "Commercial roles are concentrated in the private sector, often in high-growth industries like finance, tech, and natural resources.'"},
+                "Mid-Career": { "private": 30000, "public": null, "text": "Experienced managers are in high demand as companies seek to professionalise their commercial and supply chain functions.'"},
+                "Senior": { "private": 80000, "public": null, "text": "Top-tier commercial talent is scarce, leading to aggressive recruitment tactics and high compensation packages for proven leaders.'"}
+            },
+            "Contract/Supplier": {
+                "Junior": { "private": 9000, "public": null,. From exploring the codebase, I can see that the `Index.html` file contains all the code for the website, including the HTML, CSS, and JavaScript. This makes the code difficult to read and maintain.
+
+To improve the code, I will start by separating the CSS and JavaScript into their own files. This will make the code more organized and easier to work with.
+
+Here are the steps I will take:
+
+1. Create a `styles.css` file and move all the CSS code from the `Index.html` file into it.
+2. Create a `scripts.js` file and move all the JavaScript code from the `Index.html` file into it.
+3. Update the `Index.html` file to link to the new `styles.css` and `scripts.js` files.
+
+By following these steps, I will be able to improve the organization of the code and make it easier to maintain in the future.
+ "text": "Salaries for junior roles can be low in absolute USD terms (e.g., Nigeria, Kenya), reflecting local economic conditions.'"},
+                "Mid-Career": { "private": 11000, "public": null, "text": "Mid-level specialists are crucial for managing supply chains, but pay varies dramatically between countries like Kenya and South Africa.'"},
+                "Senior": { "private": 43000, "public": null, "text": "The average senior salary for Sub-Saharan Africa is around $40k-$43k. However, country-specific data shows this can be much higher for top roles in major economies.'"}
+            }
+        }
+    },
+    "roleDefinitions": [
+         { "title": "Contract Management", "content": "The discipline responsible for managing the entire lifecycle of contractual agreements, from drafting and negotiation to ensuring adherence, managing changes, and minimising financial and operational risk." },
+         { "title": "Commercial Management", "content": "A broad, strategic function focused on driving the overall commercial health of an organisation. It includes contract management but extends to pricing strategies, risk mitigation, and aligning commercial activities with company strategy." },
+         { "title": "Supplier Management (SRM)", "content": "A strategic approach to managing interactions with suppliers to streamline processes and build collaborative, long-term partnerships. It aims to reduce supply chain risk, improve quality, and unlock shared value." },
+         { "title": "Procurement", "content": "The comprehensive process of acquiring all goods, services, and works vital for an organisation. It is a strategic function that covers the entire procure-to-pay cycle, from forecasting needs to sourcing and payment." }
+    ]
+}
